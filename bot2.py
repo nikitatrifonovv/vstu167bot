@@ -5,7 +5,7 @@ import schedule
 
 from telebot import types
 
-bot = telebot.TeleBot("5832600016:AAExkWpia4BGgTRTRUvFqq7R3bcQ7o-sttI")
+bot = telebot.TeleBot("TOKEN")
 
 file_schedule = open('schedule.csv')
 
