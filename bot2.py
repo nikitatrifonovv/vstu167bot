@@ -1,11 +1,10 @@
 import telebot
-import logging
-
 import schedule
-
 from telebot import types
 
-bot = telebot.TeleBot("TOKEN")
+import secrets
+
+bot = telebot.TeleBot(secrets.TG_TOKEN)
 
 file_schedule = open('schedule.csv')
 
