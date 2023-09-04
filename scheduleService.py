@@ -1,5 +1,5 @@
+import uuid
 import boto3
-
 import secrets
 
 TABLE_NAME = 'schedule'
@@ -14,31 +14,55 @@ dynamodb = boto3.resource(
 
 
 def load_all():
-    try:
-        create_db()
-    except Exception as ignore:
-        pass
+    init_db()
 
     table = dynamodb.Table(TABLE_NAME)
 
     return table.scan()['Items']
 
 
-def create_db():
-    dynamodb.create_table(
-        TableName='schedule',
-        KeySchema=[
-            {
-                'AttributeName': 'id',
-                'KeyType': 'HASH'  # Partition key
-            }
-        ],
-        AttributeDefinitions=[
-            {'AttributeName': 'id', 'AttributeType': 'S'},
-            {'AttributeName': 'date', 'AttributeType': 'S'},
-            {'AttributeName': 'interval_start', 'AttributeType': 'S'},
-            {'AttributeName': 'interval_stop', 'AttributeType': 'S'},
-            {'AttributeName': 'lesson_name', 'AttributeType': 'S'},
-            {'AttributeName': 'teacher_name', 'AttributeType': 'S'}
-        ]
+def save_lesson(date, interval_start, interval_stop, lesson_name, auditory,teacher_name):
+    init_db()
+    table = dynamodb.Table(TABLE_NAME)
+    table.put_item(
+        Item={
+            'id': str(uuid.uuid4()),
+            'date': date,
+            'interval_start': interval_start,
+            'interval_stop': interval_stop,
+            'lesson_name': lesson_name,
+            'auditory': auditory,
+            'teacher_name': teacher_name
+        }
     )
+
+
+def delete_lesson(_id):
+    init_db()
+    table = dynamodb.Table(TABLE_NAME)
+    table.delete_item(Item={'id': str(_id)})
+
+
+def init_db():
+    try:
+        dynamodb.create_table(
+            TableName='schedule',
+            KeySchema=[
+                {
+                    'AttributeName': 'id',
+                    'KeyType': 'HASH'  # Partition key
+                }
+            ],
+            AttributeDefinitions=[
+                {'AttributeName': 'id', 'AttributeType': 'S'},
+                {'AttributeName': 'date', 'AttributeType': 'S'},
+                {'AttributeName': 'interval_start', 'AttributeType': 'S'},
+                {'AttributeName': 'interval_stop', 'AttributeType': 'S'},
+                {'AttributeName': 'lesson_name', 'AttributeType': 'S'},
+                {'AttributeName': 'auditory', 'AttributeType': 'S'},
+                {'AttributeName': 'teacher_name', 'AttributeType': 'S'}
+            ]
+        )
+    except Exception as ignore: pass
+
+# save_lesson('2023-09-07', '18:35', '21:30', 'Физика', 'Т-312', 'Аршинов А.В.')

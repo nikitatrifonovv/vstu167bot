@@ -1,34 +1,24 @@
-import csv
 import datetime
+import scheduleService as ss
 
 today = datetime.date.today()
 
 
-def getThisWeekSchedule(csv_lines):
+def getThisWeekSchedule():
+    lessons = ss.load_all()
     week = []
-    for line in csv_lines:
-        income_date = datetime.datetime.strptime(line[0], "%d.%m.%Y").date()
+    for l in lessons:
+        income_date = datetime.datetime.strptime(l['date'], "%Y-%m-%d").date()
         if income_date >= today and (abs(today - income_date)).days < 7:
-            week.append(line)
-
+            week.append(l)
     return week
 
 
-def getAllSchedule(csv_lines):
+def getAllSchedule():
+    lessons = ss.load_all()
     all = []
-    for line in csv_lines:
-        income_date = datetime.datetime.strptime(line[0], "%d.%m.%Y").date()
+    for l in lessons:
+        income_date = datetime.datetime.strptime(l['date'], "%Y-%m-%d").date()
         if income_date >= today:
-            all.append(line)
-
+            all.append(l)
     return all
-
-
-def getSchedule(file_url, week=False):
-    with open(file_url, newline='', encoding="utf-8") as csvfile:
-        reader = csv.reader(csvfile)
-        if week:
-            return getThisWeekSchedule(reader)
-        else:
-            return getAllSchedule(reader)
-
