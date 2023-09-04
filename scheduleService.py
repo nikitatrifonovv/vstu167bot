@@ -46,7 +46,7 @@ def delete_lesson(_id):
 def init_db():
     try:
         dynamodb.create_table(
-            TableName='schedule',
+            TableName=TABLE_NAME,
             KeySchema=[
                 {
                     'AttributeName': 'id',
@@ -64,5 +64,3 @@ def init_db():
             ]
         )
     except Exception as ignore: pass
-
-# save_lesson('2023-09-07', '18:35', '21:30', 'Физика', 'Т-312', 'Аршинов А.В.')

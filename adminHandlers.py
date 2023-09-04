@@ -32,23 +32,17 @@ def add_admin_step_2(message: types.Message, bot: TeleBot):
 
 def add_lessons(message: types.Message, bot: TeleBot):
     if userService.is_admin(message.from_user.id):
-        bot.send_message(message.chat.id, 'Следующим сообщением напишите строки в формате: '
-                                          '\nДата;Название;Начало;Конец;Аудитория;Преподаватель')
-        bot.register_next_step_handler(message, add_lessons_step_2, bot=bot)
+        lessons = message.text.splitlines()[1:]
+        try:
+            for l in lessons:
+                items = l.split(';')
+                scheduleService.save_lesson(items[0], items[2], items[3], items[1], items[4], items[5])
+        except Exception as e:
+            bot.send_message(message.chat.id, f'Ошибка: {e}')
+
+        bot.send_message(message.chat.id, 'Успешно!')
     else:
         bot.reply_to(message, 'Извините, но у вас нет доступа к данной функции.')
-
-
-def add_lessons_step_2(message: types.Message, bot: TeleBot):
-    lines = str.splitlines(message.text)
-    try:
-        for l in lines:
-            items = l.split(';')
-            scheduleService.save_lesson(items[0], items[2], items[3], items[1], items[4], items[5])
-    except Exception as e:
-        bot.send_message(message.chat.id, f'Ошибка: {e}')
-
-    bot.send_message(message.chat.id, 'Успешно!')
 
 
 
