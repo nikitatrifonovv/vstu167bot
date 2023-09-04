@@ -8,7 +8,6 @@ import baseHandlers
 bot = telebot.TeleBot(secrets.TG_TOKEN)
 
 
-
 adminHandlers.register_handlers(bot)
 baseHandlers.register_handlers(bot)
 
