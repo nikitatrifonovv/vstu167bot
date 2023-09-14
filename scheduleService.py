@@ -40,7 +40,7 @@ def save_lesson(date, interval_start, interval_stop, lesson_name, auditory,teach
 def delete_lesson(_id):
     init_db()
     table = dynamodb.Table(TABLE_NAME)
-    table.delete_item(Item={'id': str(_id)})
+    table.delete_item(Key={'id': str(_id)})
 
 
 def init_db():
